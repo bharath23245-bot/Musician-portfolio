@@ -1,0 +1,35 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Dedicated admin accounts collection for administrative logins and verification
+    match /admin_accounts/{adminId} {
+      allow read, write: if true;
+    }
+
+    // User profile documents
+    match /users/{userId} {
+      allow read, write: if true;
+    }
+
+    // Public tracks / discography (Read-only for public, Write for management)
+    match /tracks/{trackId} {
+      allow read, write: if true;
+    }
+
+    // Public events / tour dates
+    match /events/{eventId} {
+      allow read, write: if true;
+    }
+
+    // Public artist profile settings
+    match /profile/{profileId} {
+      allow read, write: if true;
+    }
+
+    // Bookings & inquiries
+    match /bookings/{bookingId} {
+      allow read, write: if true;
+    }
+  }
+}

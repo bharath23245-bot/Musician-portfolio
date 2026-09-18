@@ -1,0 +1,6 @@
+{
+  "name": "Maestro - Artist Portfolio & Management",
+  "description": "Portfolio and booking website for Bharath Kannan, Grade 7 Pianist & Music Composer, featuring live bookings, event schedules, and discography.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}
