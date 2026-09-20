@@ -1,6 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Track, ArtistProfile, UpcomingEvent } from '../types';
 import { Play, ChevronDown, ArrowRight, Instagram } from 'lucide-react';
+import { LegalModal } from './LegalModal';
 
 interface PublicPortfolioProps {
   profile: ArtistProfile;
@@ -25,6 +26,14 @@ export const PublicPortfolio: React.FC<PublicPortfolioProps> = ({
   onOpenBio,
   onNavigateToLogin,
 }) => {
+  const [isLegalModalOpen, setIsLegalModalOpen] = useState(false);
+  const [legalTab, setLegalTab] = useState<'privacy' | 'terms'>('privacy');
+
+  const handleOpenLegal = (tab: 'privacy' | 'terms') => {
+    setLegalTab(tab);
+    setIsLegalModalOpen(true);
+  };
+
   const scrollToSection = (id: string) => {
     const element = document.getElementById(id);
     if (element) {
@@ -44,128 +53,145 @@ export const PublicPortfolio: React.FC<PublicPortfolioProps> = ({
               e.preventDefault();
               scrollToSection('hero-section');
             }}
-            className="text-lg sm:text-xl font-serif tracking-[0.2em] font-medium text-white hover:text-[#c8a251] transition-colors"
+            className="text-base sm:text-lg tracking-[0.25em] font-serif font-normal text-[#f5f5f7] hover:text-[#c8a251] transition-colors uppercase"
           >
-            BHARATH KANNAN
+            {profile.name}
           </a>
 
-          {/* Navigation Links */}
-          <nav className="hidden md:flex items-center space-x-8 text-xs uppercase tracking-widest text-[#9ea2b0]">
-            <button
-              onClick={() => scrollToSection('hero-section')}
-              className="text-[#c8a251] hover:text-white transition-colors"
-            >
-              Home
-            </button>
+          {/* Desktop Nav Links */}
+          <nav className="hidden md:flex items-center space-x-8 text-xs uppercase tracking-[0.2em] text-[#9ca3af]">
             <button
               onClick={() => scrollToSection('about-section')}
-              className="hover:text-white transition-colors"
+              className="hover:text-[#c8a251] transition-colors cursor-pointer"
             >
               About
             </button>
             <button
               onClick={() => scrollToSection('services-section')}
-              className="hover:text-white transition-colors"
+              className="hover:text-[#c8a251] transition-colors cursor-pointer"
             >
               Services
             </button>
             <button
-              onClick={() => scrollToSection('contact-section')}
-              className="hover:text-white transition-colors"
+              onClick={() => scrollToSection('discography-section')}
+              className="hover:text-[#c8a251] transition-colors cursor-pointer"
             >
-              Contact
+              Discography
+            </button>
+            <button
+              onClick={() => scrollToSection('concerts-section')}
+              className="hover:text-[#c8a251] transition-colors cursor-pointer"
+            >
+              Concerts
             </button>
           </nav>
 
-          {/* Action Button */}
+          {/* Action CTA */}
           <div className="flex items-center gap-3">
             <button
-              id="portfolio-book-me-header-btn"
               onClick={() => onOpenBooking('Live Performances')}
-              className="px-5 sm:px-6 py-2 bg-[#c8a251] hover:bg-[#d4b059] text-[#0b0c0e] font-semibold text-xs uppercase tracking-widest rounded-sm transition-all shadow-md active:scale-95"
+              className="px-5 py-2.5 rounded-full bg-[#181920] border border-[#2b2d37] hover:border-[#c8a251] text-[#c8a251] hover:text-white text-xs uppercase tracking-widest transition-all cursor-pointer shadow-sm"
             >
-              BOOK ME
+              Book Inquiries
             </button>
           </div>
         </div>
       </header>
 
-      {/* 2. Hero Section (Grand Pianist with Spotlights) */}
+      {/* 2. Hero Section (Minimalist & Cinematic) */}
       <section
         id="hero-section"
-        className="relative min-h-screen flex flex-col items-center justify-center text-center px-6 pt-20 overflow-hidden"
+        className="relative min-h-[90vh] flex flex-col justify-center items-center text-center px-6 pt-28 pb-16 overflow-hidden"
       >
-        {/* Background Image with Dark Vignette Gradient */}
-        <div className="absolute inset-0 z-0">
-          <img
-            src={profile.heroImage || '/hero-bg.jpg'}
-            alt={`${profile.name} portrait`}
-            onError={(e) => {
-              const target = e.currentTarget;
-              if (target.src !== '/hero-bg.jpg') {
-                target.src = '/hero-bg.jpg';
-              }
-            }}
-            className="w-full h-full object-cover object-top opacity-35 scale-105 transform filter brightness-95"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0b0c0e] via-[#0b0c0e]/70 to-[#0b0c0e]/85" />
-          <div className="absolute inset-0 bg-radial from-transparent via-[#0b0c0e]/50 to-[#0b0c0e]" />
-        </div>
+        {/* Subtle Background Lighting Glow */}
+        <div className="absolute top-1/3 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[350px] bg-[#c8a251]/5 rounded-full blur-[140px] pointer-events-none" />
 
-        {/* Hero Content */}
-        <div className="relative z-10 max-w-4xl mx-auto space-y-6 pt-12">
-          <h1 className="text-5xl sm:text-7xl md:text-8xl lg:text-9xl font-serif tracking-[0.08em] font-normal text-white uppercase leading-none drop-shadow-2xl">
-            {profile.name || 'BHARATH KANNAN'}
+        <div className="max-w-4xl mx-auto z-10 space-y-6">
+          <div className="inline-block mb-2">
+            <span className="text-[11px] uppercase tracking-[0.3em] text-[#c8a251] font-semibold border-b border-[#c8a251]/30 pb-1">
+              {profile.tagline}
+            </span>
+          </div>
+
+          <h1 className="text-4xl sm:text-6xl md:text-7xl lg:text-8xl font-serif font-light tracking-[0.12em] text-[#f4f4f6] uppercase leading-tight">
+            {profile.name}
           </h1>
 
-          <p className="text-sm sm:text-base md:text-xl font-medium tracking-[0.25em] uppercase text-[#c8a251] max-w-2xl mx-auto">
-            {profile.tagline || 'PIANIST | COMPOSER | PERFORMER'}
+          <p className="text-sm sm:text-base md:text-lg text-[#9da2b4] max-w-2xl mx-auto font-light leading-relaxed">
+            {profile.quote}
           </p>
+
+          {/* Hero CTAs */}
+          <div className="pt-6 flex flex-col sm:flex-row items-center justify-center gap-4">
+            <button
+              onClick={() => {
+                if (tracks.length > 0) {
+                  onPlayTrack(tracks[0]);
+                } else {
+                  scrollToSection('discography-section');
+                }
+              }}
+              className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-[#c8a251] hover:bg-[#d4b05e] text-[#0b0c0e] text-xs font-semibold uppercase tracking-[0.2em] transition-all flex items-center justify-center gap-2 shadow-lg shadow-[#c8a251]/10 cursor-pointer"
+            >
+              <Play className="w-3.5 h-3.5 fill-current" />
+              <span>Listen to Repertoire</span>
+            </button>
+
+            <button
+              onClick={() => onOpenBooking('Live Performances')}
+              className="w-full sm:w-auto px-8 py-3.5 rounded-full bg-transparent hover:bg-white/5 border border-[#2e313c] hover:border-[#9da2b4] text-[#d6d8e1] text-xs uppercase tracking-[0.2em] transition-all cursor-pointer"
+            >
+              Request Booking
+            </button>
+          </div>
         </div>
 
         {/* Scroll Indicator */}
-        <button
+        <div
           onClick={() => scrollToSection('about-section')}
-          aria-label="Scroll to About section"
-          className="absolute bottom-8 z-10 text-[#8e93a3] hover:text-white transition-colors animate-bounce p-2"
+          className="absolute bottom-8 left-1/2 -translate-x-1/2 flex flex-col items-center gap-2 text-[#6f7382] hover:text-[#c8a251] transition-colors cursor-pointer"
         >
-          <ChevronDown className="w-6 h-6" />
-        </button>
+          <span className="text-[10px] uppercase tracking-[0.25em]">Scroll</span>
+          <ChevronDown className="w-4 h-4 animate-bounce" />
+        </div>
       </section>
 
-     {/* 3. About Section (Portrait & Philosophy) */}
+      {/* 3. About Section (Portrait & Philosophy) */}
       <section
         id="about-section"
         className="pt-20 sm:pt-28 pb-10 sm:pb-12 px-6 sm:px-12 md:px-20 max-w-7xl mx-auto"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Left: Atmospheric Musician Portrait */}
-          <div className="lg:col-span-5 flex justify-center">
-            <div className="relative w-full max-w-md aspect-[4/5] rounded-xl overflow-hidden bg-[#16171b] border border-[#262832] shadow-2xl group">
+          <div className="lg:col-span-5 relative group">
+            <div className="aspect-[4/5] rounded-xl overflow-hidden bg-[#16171d] border border-[#262833] relative shadow-2xl">
               <img
-                src={profile.portraitImage || '/bharath-portrait.jpg'}
-                alt={`Portrait of ${profile.name}`}
-                onError={(e) => {
-                  const target = e.currentTarget;
-                  if (target.src !== '/bharath-portrait.jpg') {
-                    target.src = '/bharath-portrait.jpg';
-                  }
-                }}
-                className="w-full h-full object-cover object-top group-hover:scale-105 transition-transform duration-700"
-                referrerPolicy="no-referrer"
+                src={profile.photoUrl}
+                alt={profile.name}
+                className="w-full h-full object-cover grayscale contrast-110 group-hover:scale-105 transition-transform duration-700 opacity-90"
               />
-              <div className="absolute inset-0 bg-gradient-to-t from-[#0b0c0e]/50 via-transparent to-transparent opacity-30"></div>
+              <div className="absolute inset-0 bg-gradient-to-t from-[#0b0c0e] via-transparent to-transparent opacity-80" />
+              <div className="absolute bottom-6 left-6 right-6">
+                <span className="text-[10px] uppercase tracking-[0.2em] text-[#c8a251] block mb-1">
+                  Pianist & Composer
+                </span>
+                <p className="text-xs text-[#a0a5b5] italic font-serif">
+                  "Resonating through timeless acoustic purity."
+                </p>
+              </div>
             </div>
           </div>
 
-          {/* Right: Artist Statement & Bio */}
+          {/* Right: Artist Narrative */}
           <div className="lg:col-span-7 space-y-6">
-            <h2 className="text-2xl sm:text-3xl md:text-4xl font-serif text-[#f2f4f8] font-normal leading-snug">
-              {profile.quote}
-            </h2>
-
-            <div className="w-16 h-0.5 bg-[#c8a251]"></div>
+            <div>
+              <span className="text-[11px] uppercase tracking-[0.25em] text-[#c8a251] font-semibold">
+                The Philosophy
+              </span>
+              <h2 className="text-3xl sm:text-4xl md:text-5xl font-serif font-light text-white mt-2 leading-tight">
+                An Architecture of Pure Resonance & Emotion
+              </h2>
+            </div>
 
             <div className="space-y-4 text-[#a3a7b6] text-sm sm:text-base leading-relaxed">
               <p>{profile.bioParagraph1}</p>
@@ -184,18 +210,26 @@ export const PublicPortfolio: React.FC<PublicPortfolioProps> = ({
                 </button>
               </div>
 
-              {/* Instagram Profile Navigation */}
-              <div className="pt-1 flex items-center gap-3">
+              {/* Instagram Profile Navigation - Prominent Enriched Button */}
+              <div className="pt-2 flex items-center gap-3">
                 <a
                   id="about-instagram-link"
                   href={profile.instagram || 'https://www.instagram.com/bharathk_0'}
                   target="_blank"
                   rel="noreferrer"
                   aria-label="Visit Bharath Kannan Instagram Profile"
-                  className="inline-flex items-center justify-center w-10 h-10 rounded-full bg-[#181920] border border-[#2c2f3b] text-[#c8a251] hover:text-white hover:bg-[#232530] hover:border-[#c8a251] transition-all shadow-md group"
-                  title="Instagram (@bharathk_0)"
+                  className="inline-flex items-center justify-center w-12 h-12 rounded-full bg-[#181920] border-2 border-[#2c2f3b] text-[#c8a251] hover:text-white hover:bg-[#232530] hover:border-[#c8a251] transition-all shadow-lg group cursor-pointer active:scale-95"
+                  title="Follow on Instagram (@bharathk_0)"
                 >
-                  <Instagram className="w-4 h-4 group-hover:scale-110 transition-transform" />
+                  <Instagram className="w-6 h-6 group-hover:scale-110 transition-transform" />
+                </a>
+                <a
+                  href={profile.instagram || 'https://www.instagram.com/bharathk_0'}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="text-xs text-[#a5a9ba] hover:text-[#c8a251] font-mono tracking-wider transition-colors"
+                >
+                  @bharathk_0
                 </a>
               </div>
             </div>
@@ -203,100 +237,193 @@ export const PublicPortfolio: React.FC<PublicPortfolioProps> = ({
         </div>
       </section>
 
-     {/* 4. Available For / Services Section */}
+      {/* 4. Available For / Services Section */}
       <section
         id="services-section"
         className="pt-10 sm:pt-12 pb-20 sm:pb-24 px-6 sm:px-12 md:px-20 max-w-7xl mx-auto border-t border-[#1a1b22]"
       >
         <div className="mb-10">
           <span className="text-[11px] uppercase tracking-[0.25em] text-[#c8a251] font-semibold">
-            AVAILABLE FOR
+            Engagements
           </span>
+          <h2 className="text-3xl sm:text-4xl font-serif font-light text-white mt-1">
+            Available For
+          </h2>
         </div>
 
-        <div className="divide-y divide-[#1e2029]">
-          {/* Item 1: Live Performances */}
-          <div className="py-8 sm:py-10 grid grid-cols-1 md:grid-cols-12 gap-4 items-baseline px-3 -mx-3 rounded-xl transition-all">
-            <div className="md:col-span-4">
-              <h3 className="text-2xl sm:text-3xl font-serif text-[#f2f4f8]">
-                Live Performances
-              </h3>
-            </div>
-            <div className="md:col-span-8">
-              <p className="text-sm text-[#9599a8] leading-relaxed">
-                Solo recitals, concerto appearances with orchestras, and private luxury events. Delivering an immersive, high-fidelity acoustic experience tailored to prestigious venues.
-              </p>
-            </div>
-          </div>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          {profile.services.map((service, index) => (
+            <div
+              key={index}
+              className="p-8 rounded-xl bg-[#121317] border border-[#21232c] hover:border-[#c8a251]/50 transition-all group flex flex-col justify-between"
+            >
+              <div className="space-y-4">
+                <span className="text-xs font-mono text-[#c8a251] opacity-70">
+                  0{index + 1}
+                </span>
+                <h3 className="text-xl font-serif text-[#f2f3f6] group-hover:text-[#c8a251] transition-colors">
+                  {service.title}
+                </h3>
+                <p className="text-xs text-[#8f94a4] leading-relaxed">
+                  {service.description}
+                </p>
+              </div>
 
-          {/* Item 2: Studio Sessions */}
-          <div className="py-8 sm:py-10 grid grid-cols-1 md:grid-cols-12 gap-4 items-baseline px-3 -mx-3 rounded-xl transition-all">
-            <div className="md:col-span-4">
-              <h3 className="text-2xl sm:text-3xl font-serif text-[#f2f4f8]">
-                Studio Sessions
-              </h3>
+              <div className="pt-6">
+                <button
+                  onClick={() => onOpenBooking(service.title)}
+                  className="text-xs uppercase tracking-wider text-[#c8a251] hover:text-white inline-flex items-center gap-1.5 transition-colors cursor-pointer"
+                >
+                  <span>Inquire Now</span>
+                  <ArrowRight className="w-3.5 h-3.5" />
+                </button>
+              </div>
             </div>
-            <div className="md:col-span-8">
-              <p className="text-sm text-[#9599a8] leading-relaxed">
-                Professional session playing for film scores, commercial recordings, and contemporary albums. Bringing nuanced interpretation and technical precision to your recording.
-              </p>
-            </div>
-          </div>
-
-          {/* Item 3: Composition */}
-          <div className="py-8 sm:py-10 grid grid-cols-1 md:grid-cols-12 gap-4 items-baseline px-3 -mx-3 rounded-xl transition-all">
-            <div className="md:col-span-4">
-              <h3 className="text-2xl sm:text-3xl font-serif text-[#f2f4f8]">
-                Composition
-              </h3>
-            </div>
-            <div className="md:col-span-8">
-              <p className="text-sm text-[#9599a8] leading-relaxed">
-                Original scoring for visual media, bespoke commissions for ensembles, and collaborative songwriting. Crafting evocative sonic landscapes that elevate the narrative.
-              </p>
-            </div>
-          </div>
+          ))}
         </div>
       </section>
 
-      {/* 6. Contact / CTA Banner Section */}
+      {/* 5. Discography / Audio Showcase Section */}
       <section
-        id="contact-section"
-        className="relative py-28 px-6 sm:px-12 text-center overflow-hidden border-t border-[#1a1b22]"
+        id="discography-section"
+        className="py-24 px-6 sm:px-12 md:px-20 max-w-7xl mx-auto border-t border-[#1a1b22]"
       >
-        <div className="absolute inset-0 z-0">
-          <img
-            src={profile.stageImage}
-            alt="Concert stage grand piano"
-            className="w-full h-full object-cover opacity-20 filter brightness-75"
-            referrerPolicy="no-referrer"
-          />
-          <div className="absolute inset-0 bg-gradient-to-t from-[#0b0c0e] via-[#0b0c0e]/80 to-[#0b0c0e]"></div>
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+          <div>
+            <span className="text-[11px] uppercase tracking-[0.25em] text-[#c8a251] font-semibold">
+              Selected Repertoire
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-serif font-light text-white mt-1">
+              Discography & Recordings
+            </h2>
+          </div>
+          <p className="text-xs text-[#878c9c] max-w-md">
+            Stream acoustic recordings composed and performed on concert grand pianos.
+          </p>
         </div>
 
-        <div className="relative z-10 max-w-2xl mx-auto space-y-5">
-          <span className="text-xs uppercase tracking-[0.25em] text-[#8e93a3] block font-sans">
-            LET'S CREATE SOMETHING MEMORABLE.
-          </span>
+        <div className="space-y-3">
+          {tracks.map((track, idx) => {
+            const isThisTrackPlaying = currentTrack?.id === track.id && isPlaying;
 
-          <p className="text-sm sm:text-base text-[#b9bdcb] max-w-lg mx-auto leading-relaxed">
-            Available for international bookings, commissions, and collaborations.
-          </p>
+            return (
+              <div
+                key={track.id}
+                onClick={() => onPlayTrack(track)}
+                className={`p-4 sm:p-5 rounded-xl border transition-all flex items-center justify-between cursor-pointer group ${
+                  currentTrack?.id === track.id
+                    ? 'bg-[#181920] border-[#c8a251]/60 shadow-md'
+                    : 'bg-[#121317] border-[#1f2029] hover:border-[#2e313e] hover:bg-[#15161d]'
+                }`}
+              >
+                <div className="flex items-center gap-4 sm:gap-6 min-w-0">
+                  <span className="font-mono text-xs text-[#636877] w-6 text-center">
+                    {String(idx + 1).padStart(2, '0')}
+                  </span>
 
-          <div className="pt-4">
-            <button
-              id="cta-inquire-now-btn"
-              onClick={() => onOpenBooking('Live Performances')}
-              className="px-10 py-4 bg-[#c8a251] hover:bg-[#d6b25f] text-[#0b0c0e] font-semibold text-xs uppercase tracking-widest rounded-sm transition-all shadow-xl active:scale-95"
-            >
-              INQUIRE NOW
-            </button>
+                  <button
+                    aria-label={`Play ${track.title}`}
+                    className={`w-10 h-10 rounded-full flex items-center justify-center flex-shrink-0 transition-transform group-hover:scale-105 ${
+                      isThisTrackPlaying
+                        ? 'bg-[#c8a251] text-[#0b0c0e]'
+                        : 'bg-[#1c1e26] text-[#c8a251] group-hover:bg-[#c8a251] group-hover:text-[#0b0c0e]'
+                    }`}
+                  >
+                    <Play className="w-4 h-4 fill-current ml-0.5" />
+                  </button>
+
+                  <div className="min-w-0">
+                    <h4
+                      className={`text-sm sm:text-base font-serif font-medium truncate ${
+                        currentTrack?.id === track.id
+                          ? 'text-[#c8a251]'
+                          : 'text-[#eceef2] group-hover:text-white'
+                      }`}
+                    >
+                      {track.title}
+                    </h4>
+                    <p className="text-xs text-[#7e8392] truncate mt-0.5">
+                      {track.album || 'Solo Concert Piano'} • {track.year || '2024'}
+                    </p>
+                  </div>
+                </div>
+
+                <div className="flex items-center gap-4 text-xs font-mono text-[#868b9a]">
+                  <span>{track.duration}</span>
+                </div>
+              </div>
+            );
+          })}
+        </div>
+      </section>
+
+      {/* 6. Upcoming Concerts & Tour Dates */}
+      <section
+        id="concerts-section"
+        className="py-24 px-6 sm:px-12 md:px-20 max-w-7xl mx-auto border-t border-[#1a1b22]"
+      >
+        <div className="flex flex-col md:flex-row md:items-end justify-between mb-12 gap-4">
+          <div>
+            <span className="text-[11px] uppercase tracking-[0.25em] text-[#c8a251] font-semibold">
+              Live Appearances
+            </span>
+            <h2 className="text-3xl sm:text-4xl font-serif font-light text-white mt-1">
+              Concert Itinerary
+            </h2>
           </div>
+          <button
+            onClick={() => onOpenBooking('Live Performances')}
+            className="text-xs text-[#c8a251] hover:text-white uppercase tracking-widest inline-flex items-center gap-1.5 transition-colors cursor-pointer"
+          >
+            <span>Propose Concert Date</span>
+            <ArrowRight className="w-3.5 h-3.5" />
+          </button>
+        </div>
+
+        <div className="space-y-4">
+          {events.map((event) => (
+            <div
+              key={event.id}
+              className="p-6 rounded-xl bg-[#121317] border border-[#1f2029] hover:border-[#2b2e3a] transition-all flex flex-col md:flex-row md:items-center justify-between gap-4"
+            >
+              <div className="space-y-1">
+                <span className="text-xs font-mono text-[#c8a251]">
+                  {event.date}
+                </span>
+                <h3 className="text-lg font-serif text-[#f2f3f6]">
+                  {event.city} • {event.venue}
+                </h3>
+                <p className="text-xs text-[#7d8291]">
+                  {event.program}
+                </p>
+              </div>
+
+              <div className="flex items-center gap-3">
+                {event.ticketUrl ? (
+                  <a
+                    href={event.ticketUrl}
+                    target="_blank"
+                    rel="noreferrer"
+                    className="px-5 py-2 rounded-lg bg-[#c8a251] hover:bg-[#d6b25f] text-[#0b0c0e] text-xs font-semibold uppercase tracking-wider transition-colors shadow-md"
+                  >
+                    Book Tickets
+                  </a>
+                ) : (
+                  <button
+                    onClick={() => onOpenBooking(event.program)}
+                    className="px-5 py-2 rounded-lg bg-[#1a1b22] hover:bg-[#252833] border border-[#2f3240] text-xs text-[#d0d3df] uppercase tracking-wider transition-colors cursor-pointer"
+                  >
+                    Inquire Event
+                  </button>
+                )}
+              </div>
+            </div>
+          ))}
         </div>
       </section>
 
       {/* 7. Footer */}
-      <footer className="border-t border-[#1a1b22] pt-14 pb-12 px-6 sm:px-12 md:px-20 max-w-7xl mx-auto text-xs text-[#7a7f8e]">
+      <footer className="mt-20 border-t border-[#1a1b22] pt-14 pb-12 px-6 sm:px-12 md:px-20 max-w-7xl mx-auto">
         <div className="flex flex-col md:flex-row justify-between gap-8 items-start md:items-center">
           <div>
             <h4 className="text-xl font-serif tracking-[0.2em] text-white font-normal mb-2">
@@ -322,21 +449,40 @@ export const PublicPortfolio: React.FC<PublicPortfolioProps> = ({
               </a>
             </div>
 
-            <div className="flex items-center gap-4">
-              <span className="hover:text-white cursor-pointer transition-colors">
+            <div className="flex items-center gap-3 text-xs">
+              <button
+                type="button"
+                id="footer-privacy-btn"
+                onClick={() => handleOpenLegal('privacy')}
+                className="text-[#878c9c] hover:text-[#c8a251] cursor-pointer transition-colors"
+              >
                 Privacy Policy
-              </span>
-              <span className="hover:text-white cursor-pointer transition-colors">
+              </button>
+              <span className="text-[#323542]">•</span>
+              <button
+                type="button"
+                id="footer-terms-btn"
+                onClick={() => handleOpenLegal('terms')}
+                className="text-[#878c9c] hover:text-[#c8a251] cursor-pointer transition-colors"
+              >
                 Terms of Service
-              </span>
+              </button>
             </div>
           </div>
         </div>
 
         <div className="mt-10 pt-6 border-t border-[#17181e] text-center text-[#555966] text-[11px]">
-          <span>© 2025 BHARATH KANNAN. Pianist | Composer | Performer. All rights reserved.</span>
+          <span>© 2026 BHARATH KANNAN. Pianist | Composer | Performer. All rights reserved.</span>
         </div>
       </footer>
+
+      {/* 6. Legal / Privacy & Terms Modal */}
+      <LegalModal
+        isOpen={isLegalModalOpen}
+        onClose={() => setIsLegalModalOpen(false)}
+        initialTab={legalTab}
+        artistName={profile.name}
+      />
     </div>
   );
 };
