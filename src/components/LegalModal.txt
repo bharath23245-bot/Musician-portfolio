@@ -1,1 +1,231 @@
+import React, { useState } from 'react';
+import { X, ShieldCheck, FileText, Lock, Scale, Mail } from 'lucide-react';
 
+interface LegalModalProps {
+  isOpen: boolean;
+  onClose: () => void;
+  initialTab?: 'privacy' | 'terms';
+  artistName?: string;
+}
+
+export const LegalModal: React.FC<LegalModalProps> = ({
+  isOpen,
+  onClose,
+  initialTab = 'privacy',
+  artistName = 'BHARATH KANNAN',
+}) => {
+  const [activeTab, setActiveTab] = useState<'privacy' | 'terms'>(initialTab);
+
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/85 backdrop-blur-md overflow-y-auto">
+      <div className="relative w-full max-w-2xl bg-[#131418] border border-[#272a34] rounded-2xl p-6 sm:p-8 text-[#d8dce6] shadow-2xl my-8 flex flex-col max-h-[88vh]">
+        {/* Close button */}
+        <button
+          onClick={onClose}
+          aria-label="Close modal"
+          className="absolute top-5 right-5 text-[#8b909f] hover:text-white p-1.5 rounded-md hover:bg-[#1e2027] transition-colors"
+        >
+          <X className="w-5 h-5" />
+        </button>
+
+        {/* Header & Tabs */}
+        <div className="mb-6 pb-4 border-b border-[#222530]">
+          <div className="flex items-center gap-2 text-[#c8a251] text-xs uppercase tracking-widest font-semibold mb-1">
+            <Scale className="w-4 h-4" />
+            <span>Official Legal Documentation</span>
+          </div>
+          <h2 className="text-2xl font-serif text-white font-medium">
+            {artistName} • Legal & Compliance
+          </h2>
+
+          <div className="flex gap-2 mt-4">
+            <button
+              onClick={() => setActiveTab('privacy')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+                activeTab === 'privacy'
+                  ? 'bg-[#c8a251] text-[#0b0c0e] shadow-md'
+                  : 'bg-[#1a1b22] text-[#9ca2b5] hover:text-white hover:bg-[#242630]'
+              }`}
+            >
+              <Lock className="w-3.5 h-3.5" />
+              <span>Privacy Policy</span>
+            </button>
+            <button
+              onClick={() => setActiveTab('terms')}
+              className={`flex items-center gap-2 px-4 py-2 rounded-lg text-xs font-semibold uppercase tracking-wider transition-all cursor-pointer ${
+                activeTab === 'terms'
+                  ? 'bg-[#c8a251] text-[#0b0c0e] shadow-md'
+                  : 'bg-[#1a1b22] text-[#9ca2b5] hover:text-white hover:bg-[#242630]'
+              }`}
+            >
+              <FileText className="w-3.5 h-3.5" />
+              <span>Terms of Service</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Scrollable Content */}
+        <div className="overflow-y-auto pr-2 space-y-6 text-xs sm:text-sm text-[#a4a9bb] leading-relaxed select-text">
+          {activeTab === 'privacy' ? (
+            <div className="space-y-5">
+              <div className="p-3.5 rounded-xl bg-[#181920] border border-[#262834] flex items-start gap-3">
+                <ShieldCheck className="w-5 h-5 text-[#c8a251] flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-[#c0c5d6]">
+                  We value your privacy. Personal data provided during booking inquiries (name, email, phone number, event dates, and budget) is used exclusively for performance scheduling and direct artist management communication.
+                </p>
+              </div>
+
+              <section className="space-y-2">
+                <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
+                  1. Information We Collect
+                </h3>
+                <p>
+                  When you submit a performance proposal or booking inquiry through our official portfolio, we collect the following details:
+                </p>
+                <ul className="list-disc pl-5 space-y-1 text-[#9196a8]">
+                  <li>Full Customer / Organizer Name and Organization details.</li>
+                  <li>Contact Information: Verified Phone Number and Email Address.</li>
+                  <li>Event Specifications: Proposed Performance Date, City, Venue, Engagement Type, and Budget Allocation.</li>
+                  <li>Custom acoustic or technical rider notes provided in your inquiry.</li>
+                </ul>
+              </section>
+
+              <section className="space-y-2">
+                <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
+                  2. Purpose & Use of Data
+                </h3>
+                <p>
+                  Your information is utilized solely to:
+                </p>
+                <ul className="list-disc pl-5 space-y-1 text-[#9196a8]">
+                  <li>Evaluate concert scheduling availability and acoustic venue suitability.</li>
+                  <li>Facilitate direct communication between Bharath Kannan’s management and organizers.</li>
+                  <li>Generate official performance contracts, invoices, and scheduling riders.</li>
+                  <li>Provide customer confirmation receipts for submitted proposals.</li>
+                </ul>
+                <p className="text-[#c8a251] font-medium pt-1">
+                  We NEVER sell, rent, lease, or monetize your contact information to third-party advertisers.
+                </p>
+              </section>
+
+              <section className="space-y-2">
+                <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
+                  3. Data Security & Storage
+                </h3>
+                <p>
+                  Inquiry submissions are safeguarded using enterprise-grade Google Cloud & Firestore infrastructure with TLS encryption in transit and AES-256 encryption at rest. Access to private contact information is restricted exclusively to authenticated management personnel.
+                </p>
+              </section>
+
+              <section className="space-y-2">
+                <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
+                  4. Your Rights & Data Deletion
+                </h3>
+                <p>
+                  You have the right to request a copy of your stored booking data, update your details, or request full deletion of your contact records at any time by emailing us at{' '}
+                  <a href="mailto:bharath23245@gmail.com" className="text-[#c8a251] underline hover:text-[#d6b25f]">
+                    bharath23245@gmail.com
+                  </a>.
+                </p>
+              </section>
+
+              <div className="pt-2 text-[11px] text-[#6d7283]">
+                Last updated: September 2026. Effective for all performances, recitals, and digital interactions.
+              </div>
+            </div>
+          ) : (
+            <div className="space-y-5">
+              <div className="p-3.5 rounded-xl bg-[#181920] border border-[#262834] flex items-start gap-3">
+                <FileText className="w-5 h-5 text-[#c8a251] flex-shrink-0 mt-0.5" />
+                <p className="text-xs text-[#c0c5d6]">
+                  These Terms of Service govern the use of this website, listening to audio samples, and submitting engagement proposals for live piano concerts, orchestral engagements, and film compositions.
+                </p>
+              </div>
+
+              <section className="space-y-2">
+                <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
+                  1. Intellectual Property & Audio Copyright
+                </h3>
+                <p>
+                  All audio tracks, piano compositions, live recordings, arrangements, photographs, and written media featured on this website are the intellectual property of <strong>Bharath Kannan</strong> and protected by international copyright laws.
+                </p>
+                <ul className="list-disc pl-5 space-y-1 text-[#9196a8]">
+                  <li>Tracks provided via the audio player are for personal listening only.</li>
+                  <li>Commercial broadcast, public reproduction, sampling, or unauthorized resale without an executed sync license is strictly prohibited.</li>
+                </ul>
+              </section>
+
+              <section className="space-y-2">
+                <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
+                  2. Booking Inquiries & Performance Proposals
+                </h3>
+                <p>
+                  Submission of a booking inquiry through this website constitutes a formal proposal and does not create an immediate binding contractual performance commitment until:
+                </p>
+                <ul className="list-disc pl-5 space-y-1 text-[#9196a8]">
+                  <li>Artist management reviews schedule and confirms date availability.</li>
+                  <li>A bilateral Artist Engagement Agreement and technical rider have been executed.</li>
+                  <li>Agreed booking deposits or performance fees have been settled according to contract terms.</li>
+                </ul>
+              </section>
+
+              <section className="space-y-2">
+                <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
+                  3. Instrument & Acoustic Rider Requirements
+                </h3>
+                <p>
+                  For all live acoustic piano recitals, the venue or organizer must guarantee an acoustic grand piano (Steinway & Sons Model D/B, Yamaha CFX, or equivalent) tuned by an authorized concert piano technician on the day of rehearsal and recital.
+                </p>
+              </section>
+
+              <section className="space-y-2">
+                <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
+                  4. Cancellation, Force Majeure & Rescheduling
+                </h3>
+                <p>
+                  Performance dates impacted by events of Force Majeure (severe weather, civil emergency, national mourning, or acute illness) will be handled through good-faith rescheduling. Specific refund and cancellation policies are detailed in each executed performance contract.
+                </p>
+              </section>
+
+              <section className="space-y-2">
+                <h3 className="text-sm font-semibold text-white uppercase tracking-wider">
+                  5. Contact & Legal Inquiries
+                </h3>
+                <p>
+                  For licensing inquiries, concert contracts, or score reproduction permissions, contact management at:{' '}
+                  <a href="mailto:bharath23245@gmail.com" className="text-[#c8a251] underline hover:text-[#d6b25f]">
+                    bharath23245@gmail.com
+                  </a>.
+                </p>
+              </section>
+
+              <div className="pt-2 text-[11px] text-[#6d7283]">
+                © 2026 Bharath Kannan. All rights reserved. Registered under Indian and International Copyright Treaties.
+              </div>
+            </div>
+          )}
+        </div>
+
+        {/* Footer */}
+        <div className="mt-6 pt-4 border-t border-[#222530] flex flex-col sm:flex-row justify-between items-center gap-3">
+          <a
+            href="mailto:bharath23245@gmail.com?subject=Legal%20Inquiry%20-%20Bharath%20Kannan"
+            className="text-xs text-[#a0a5b5] hover:text-[#c8a251] flex items-center gap-1.5 transition-colors"
+          >
+            <Mail className="w-3.5 h-3.5 text-[#c8a251]" />
+            <span>Contact Legal / Management</span>
+          </a>
+          <button
+            type="button"
+            onClick={onClose}
+            className="w-full sm:w-auto px-6 py-2 rounded-lg bg-[#c8a251] hover:bg-[#d6b25f] text-[#0b0c0e] text-xs font-semibold uppercase tracking-wider transition-colors cursor-pointer"
+          >
+            I Understand
+          </button>
+        </div>
+      </div>
+    </div>
+  );
+};
