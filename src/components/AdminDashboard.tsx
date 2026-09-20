@@ -47,6 +47,7 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [showNewReleaseModal, setShowNewReleaseModal] = useState(false);
   const [showAddEventModal, setShowAddEventModal] = useState(false);
   const [showAllBookingsModal, setShowAllBookingsModal] = useState(false);
+  const [selectedBookingForAccept, setSelectedBookingForAccept] = useState<BookingRequest | null>(null);
 
   // Website Settings Form State
   const [editArtistName, setEditArtistName] = useState(profile.name);
