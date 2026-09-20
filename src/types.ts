@@ -26,6 +26,7 @@ export interface BookingRequest {
   customerName?: string;
   eventType: string;
   date: string; // Event Date
+  time?: string; // Event Time
   rawDate?: string;
   status: BookingStatus;
   venue: string;
