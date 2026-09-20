@@ -9,6 +9,8 @@ import {
 import { useAuth } from '../context/AuthContext';
 import { EventCalendarView } from './EventCalendarView';
 import { AcceptBookingModal } from './AcceptBookingModal';
+import { AcceptBookingModal } from './AcceptBookingModal';
+import { DeclineBookingModal } from './DeclineBookingModal';
 
 interface AdminDashboardProps {
   userName?: string;
@@ -47,8 +49,11 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
   const [showNewReleaseModal, setShowNewReleaseModal] = useState(false);
   const [showAddEventModal, setShowAddEventModal] = useState(false);
   const [showAllBookingsModal, setShowAllBookingsModal] = useState(false);
+  const [showNewReleaseModal, setShowNewReleaseModal] = useState(false);
+  const [showAddEventModal, setShowAddEventModal] = useState(false);
+  const [showAllBookingsModal, setShowAllBookingsModal] = useState(false);
   const [selectedBookingForAccept, setSelectedBookingForAccept] = useState<BookingRequest | null>(null);
-
+  const [selectedBookingForDecline, setSelectedBookingForDecline] = useState<BookingRequest | null>(null);
   // Website Settings Form State
   const [editArtistName, setEditArtistName] = useState(profile.name);
   const [editTagline, setEditTagline] = useState(profile.tagline);
@@ -752,21 +757,15 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
       Accept Booking
     </button>
   )}
-                        {b.status !== 'Declined' && (
-                          <button
-                            onClick={() => onUpdateBookingStatus(b.id, 'Declined')}
-                            className="px-3 py-1 bg-[#242630] text-[#9ca1b0] hover:text-white text-xs rounded transition-colors"
-                          >
-                            Decline
-                          </button>
-                        )}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          )}
+                       {b.status !== 'Declined' && (
+  <button
+    id={`decline-booking-btn-${b.id}`}
+    onClick={() => setSelectedBookingForDecline(b)}
+    className="px-3 py-1 bg-[#242630] hover:bg-rose-950/60 text-[#9ca1b0] hover:text-rose-300 border border-transparent hover:border-rose-800/50 text-xs rounded transition-all cursor-pointer"
+  >
+    Decline
+  </button>
+)}
 
           {/* Tour & Recital Calendar Tab */}
           {activeTab === 'calendar' && (
@@ -1283,6 +1282,16 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
     </div>
   );
 };
+{/* Decline Booking & Customer Notification Modal */}
+      <DeclineBookingModal
+        isOpen={Boolean(selectedBookingForDecline)}
+        onClose={() => setSelectedBookingForDecline(null)}
+        booking={selectedBookingForDecline}
+        artistName={profile.name || 'Bharath Kannan'}
+        onConfirmDecline={(id) => {
+          onUpdateBookingStatus(id, 'Declined');
+        }}
+      />
 
       {/* View All Bookings Modal */}
       {showAllBookingsModal && (
