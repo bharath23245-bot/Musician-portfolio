@@ -1270,6 +1270,19 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
           </div>
         </div>
       )}
+      {/* Accept Booking & Customer Notification Modal */}
+      <AcceptBookingModal
+        isOpen={Boolean(selectedBookingForAccept)}
+        onClose={() => setSelectedBookingForAccept(null)}
+        booking={selectedBookingForAccept}
+        artistName={profile.name || 'Bharath Kannan'}
+        onConfirmAccept={(id) => {
+          onUpdateBookingStatus(id, 'Confirmed');
+        }}
+      />
+    </div>
+  );
+};
 
       {/* View All Bookings Modal */}
       {showAllBookingsModal && (
