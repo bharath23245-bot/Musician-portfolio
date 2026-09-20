@@ -744,14 +744,14 @@ export const AdminDashboard: React.FC<AdminDashboardProps> = ({
                         Submitted on: {b.createdAt}
                       </span>
                       <div className="flex gap-2">
-                        {b.status !== 'Confirmed' && (
-                          <button
-                            onClick={() => onUpdateBookingStatus(b.id, 'Confirmed')}
-                            className="px-3 py-1 bg-[#c8a251] text-[#0b0c0e] font-semibold text-xs rounded hover:bg-[#d4ad57] transition-colors"
-                          >
-                            Accept Booking
-                          </button>
-                        )}
+                       {b.status !== 'Confirmed' && (
+    <button
+      onClick={() => setSelectedBookingForAccept(b)}
+      className="px-3 py-1 bg-[#c8a251] text-[#0b0c0e] font-semibold text-xs rounded hover:bg-[#d4ad57] transition-colors cursor-pointer"
+    >
+      Accept Booking
+    </button>
+  )}
                         {b.status !== 'Declined' && (
                           <button
                             onClick={() => onUpdateBookingStatus(b.id, 'Declined')}
