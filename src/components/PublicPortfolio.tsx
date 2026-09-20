@@ -134,10 +134,10 @@ export const PublicPortfolio: React.FC<PublicPortfolioProps> = ({
         </button>
       </section>
 
-      {/* 3. About Section (Portrait & Philosophy) */}
+     {/* 3. About Section (Portrait & Philosophy) */}
       <section
         id="about-section"
-        className="py-24 sm:py-32 px-6 sm:px-12 md:px-20 max-w-7xl mx-auto"
+        className="pt-20 sm:pt-28 pb-10 sm:pb-12 px-6 sm:px-12 md:px-20 max-w-7xl mx-auto"
       >
         <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 lg:gap-16 items-center">
           {/* Left: Atmospheric Musician Portrait */}
@@ -203,10 +203,10 @@ export const PublicPortfolio: React.FC<PublicPortfolioProps> = ({
         </div>
       </section>
 
-      {/* 4. Available For / Services Section */}
+     {/* 4. Available For / Services Section */}
       <section
         id="services-section"
-        className="py-24 px-6 sm:px-12 md:px-20 max-w-7xl mx-auto border-t border-[#1a1b22]"
+        className="pt-10 sm:pt-12 pb-20 sm:pb-24 px-6 sm:px-12 md:px-20 max-w-7xl mx-auto border-t border-[#1a1b22]"
       >
         <div className="mb-10">
           <span className="text-[11px] uppercase tracking-[0.25em] text-[#c8a251] font-semibold">
