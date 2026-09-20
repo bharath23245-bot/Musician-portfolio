@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { X, CheckCircle2, Calendar, MapPin, Mail, User, ShieldAlert, Loader2, ArrowRight } from 'lucide-react';
+import { X, CheckCircle2, Calendar, MapPin, Mail, User, ShieldAlert, Loader2, ArrowRight, Download, Check } from 'lucide-react';
 import { BookingRequest } from '../types';
 import { submitBookingInquiry } from '../services/firestoreService';
 import { bookingSchema } from '../schemas/validation';
@@ -46,6 +46,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const [validationError, setValidationError] = useState('');
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [submittedPhone, setSubmittedPhone] = useState('');
+  const [submittedId, setSubmittedId] = useState('');
+  const [hasDownloaded, setHasDownloaded] = useState(false);
 
   if (!isOpen) return null;
 
@@ -63,6 +65,8 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     setValidationError('');
     setIsSubmitted(false);
     setSubmittedPhone('');
+    setSubmittedId('');
+    setHasDownloaded(false);
   };
 
   const handleClose = () => {
@@ -73,6 +77,64 @@ export const BookingModal: React.FC<BookingModalProps> = ({
   const handleSelectVenuePreset = (presetVenue: string, presetCity: string) => {
     setVenue(presetVenue);
     setLocation(presetCity);
+  };
+
+  const handleDownloadCopy = () => {
+    const targetLocation = venue || location || 'NCPA Tata Theatre, Mumbai, India';
+    const finalBudget = budget.trim() ? (budget.startsWith('₹') ? budget : `₹${budget}`) : '₹1,50,000';
+    const refId = submittedId || `BK-${Math.floor(100 + Math.random() * 900)}`;
+
+    const textReceipt = `===============================================================
+       ${artistName.toUpperCase()} — OFFICIAL BOOKING INQUIRY COPY
+===============================================================
+
+REFERENCE ID      : ${refId}
+DATE SUBMITTED    : ${new Date().toLocaleDateString('en-IN', { year: 'numeric', month: 'long', day: 'numeric' })}
+STATUS            : Pending Review by Management
+
+---------------------------------------------------------------
+CUSTOMER & CONTACT DETAILS
+---------------------------------------------------------------
+Customer Name     : ${client}
+Phone Number      : ${submittedPhone || phone}
+Email Address     : ${email}
+
+---------------------------------------------------------------
+EVENT & PERFORMANCE SPECIFICATIONS
+---------------------------------------------------------------
+Engagement Type   : ${eventType}
+Event Date        : ${date}
+Venue / Location  : ${targetLocation}
+Budget Allocation : ${finalBudget}
+
+---------------------------------------------------------------
+ACOUSTIC & EVENT NOTES
+---------------------------------------------------------------
+${message ? message : 'Standard concert / acoustic performance arrangements.'}
+
+---------------------------------------------------------------
+ARTIST MANAGEMENT CONTACT
+---------------------------------------------------------------
+Artist            : ${artistName}
+Management Email  : bharath23245@gmail.com
+Official Instagram: https://www.instagram.com/bharathk_0
+
+Thank you for your proposal. A member of ${artistName}'s management team
+will review your acoustic schedule, repertoire, and arrangements,
+and contact you shortly.
+===============================================================`;
+
+    const blob = new Blob([textReceipt], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    const safeClient = (client || 'Customer').replace(/[^a-zA-Z0-9]/g, '_');
+    link.download = `Booking_Inquiry_${safeClient}_${refId}.txt`;
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+    setHasDownloaded(true);
   };
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -132,8 +194,10 @@ export const BookingModal: React.FC<BookingModalProps> = ({
     setIsSubmitting(false);
 
     if (result.success) {
+      const assignedId = result.id || `BK-${Math.floor(100 + Math.random() * 900)}`;
+      setSubmittedId(assignedId);
       const newBooking: BookingRequest = {
-        id: result.id || `BK-${Math.floor(100 + Math.random() * 900)}`,
+        id: assignedId,
         client,
         customerName: client,
         email,
@@ -221,42 +285,63 @@ export const BookingModal: React.FC<BookingModalProps> = ({
               </div>
             </div>
 
-            {/* Action to reset form and return */}
-            <div className="pt-2 flex flex-col sm:flex-row gap-2.5 justify-center">
-              <a
-                href={`mailto:bharath23245@gmail.com?subject=${encodeURIComponent(`Booking Inquiry from ${client} for ${date}`)}&body=${encodeURIComponent(
-                  `Hello Bharath Kannan Management,\n\nBooking inquiry details:\n\n` +
-                  `• Customer Name: ${client}\n` +
-                  `• Phone Number: ${submittedPhone || phone}\n` +
-                  `• Email: ${email}\n` +
-                  `• Event Date: ${date}\n` +
-                  `• Location: ${venue || location || 'India'}\n` +
-                  `• Engagement Type: ${eventType}\n` +
-                  `• Budget: ${budget ? (budget.startsWith('₹') ? budget : `₹${budget}`) : '₹1,50,000'}\n` +
-                  `• Notes: ${message || 'None'}\n\n` +
-                  `Sent from portfolio booking request.`
-                )}`}
-                target="_blank"
-                rel="noreferrer"
-                className="flex-1 py-3 px-4 rounded-lg bg-[#1e2028] hover:bg-[#282b36] border border-[#333745] text-xs font-semibold uppercase tracking-wider text-white transition-colors flex items-center justify-center gap-2"
-              >
-                <Mail className="w-3.5 h-3.5 text-[#c8a251]" />
-                <span>Open in Gmail / Mail</span>
-              </a>
+            {/* Action to download copy, send email, and close */}
+            <div className="pt-2 space-y-2.5">
               <button
                 type="button"
-                onClick={resetForm}
-                className="flex-1 py-3 px-4 rounded-lg bg-[#1e2028] hover:bg-[#282b36] border border-[#333745] text-xs font-semibold uppercase tracking-wider text-white transition-colors"
+                id="download-booking-copy-btn"
+                onClick={handleDownloadCopy}
+                className="w-full py-3 px-4 rounded-lg bg-[#c8a251] hover:bg-[#d6b25f] text-[#0b0c0e] text-xs font-semibold uppercase tracking-wider transition-all shadow-lg flex items-center justify-center gap-2 active:scale-[0.99] cursor-pointer"
               >
-                New Inquiry
+                {hasDownloaded ? (
+                  <>
+                    <Check className="w-4 h-4 text-[#0b0c0e]" />
+                    <span>Booking Copy Downloaded! (Click to re-download)</span>
+                  </>
+                ) : (
+                  <>
+                    <Download className="w-4 h-4 text-[#0b0c0e]" />
+                    <span>Download Copy of Booking (.txt)</span>
+                  </>
+                )}
               </button>
-              <button
-                type="button"
-                onClick={handleClose}
-                className="flex-1 py-3 px-4 rounded-lg bg-[#c8a251] hover:bg-[#d6b25f] text-[#0b0c0e] text-xs font-semibold uppercase tracking-wider transition-colors shadow-md"
-              >
-                Done
-              </button>
+
+              <div className="flex flex-col sm:flex-row gap-2.5 justify-center">
+                <a
+                  href={`mailto:bharath23245@gmail.com?subject=${encodeURIComponent(`Booking Inquiry from ${client} for ${date}`)}&body=${encodeURIComponent(
+                    `Hello Bharath Kannan Management,\n\nBooking inquiry details:\n\n` +
+                    `• Customer Name: ${client}\n` +
+                    `• Phone Number: ${submittedPhone || phone}\n` +
+                    `• Email: ${email}\n` +
+                    `• Event Date: ${date}\n` +
+                    `• Location: ${venue || location || 'India'}\n` +
+                    `• Engagement Type: ${eventType}\n` +
+                    `• Budget: ${budget ? (budget.startsWith('₹') ? budget : `₹${budget}`) : '₹1,50,000'}\n` +
+                    `• Notes: ${message || 'None'}\n\n` +
+                    `Sent from portfolio booking request.`
+                  )}`}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex-1 py-2.5 px-3 rounded-lg bg-[#1e2028] hover:bg-[#282b36] border border-[#333745] text-xs font-semibold uppercase tracking-wider text-white transition-colors flex items-center justify-center gap-2"
+                >
+                  <Mail className="w-3.5 h-3.5 text-[#c8a251]" />
+                  <span>Open in Gmail</span>
+                </a>
+                <button
+                  type="button"
+                  onClick={resetForm}
+                  className="flex-1 py-2.5 px-3 rounded-lg bg-[#1e2028] hover:bg-[#282b36] border border-[#333745] text-xs font-semibold uppercase tracking-wider text-[#a0a5b5] hover:text-white transition-colors"
+                >
+                  New Inquiry
+                </button>
+                <button
+                  type="button"
+                  onClick={handleClose}
+                  className="flex-1 py-2.5 px-3 rounded-lg bg-[#252834] hover:bg-[#303444] border border-[#3d4254] text-white text-xs font-semibold uppercase tracking-wider transition-colors"
+                >
+                  Close
+                </button>
+              </div>
             </div>
           </div>
         ) : (
