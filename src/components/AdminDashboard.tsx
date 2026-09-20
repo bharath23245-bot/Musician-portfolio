@@ -8,7 +8,7 @@ import {
 } from 'lucide-react';
 import { useAuth } from '../context/AuthContext';
 import { EventCalendarView } from './EventCalendarView';
-import { resetLocalProfileCache } from '../services/firestoreService';
+import { AcceptBookingModal } from './AcceptBookingModal';
 
 interface AdminDashboardProps {
   userName?: string;
